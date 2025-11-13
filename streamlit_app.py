@@ -51,10 +51,10 @@ hand_df = get_handwashing_data()
 # -----------------------------------------------------------------------------
 # Draw the page
 
-st.title(":soap: Handwashing & Childbed Fever — Clinic Mortality Explorer")
+st.title(":soap: Handwashing Saves Lives: A Comparison of Clinic Mortality Rates")
 
 st.write(
-    "This dashboard explores clinic birth/death data (mortality rates) over time."
+    "This dashboard explores clinic birth/death data (mortality rates) over time Dr. Ignaz Semmelweis compared two clinics: one was a hospital where autopsies occured, the other a midwife clinic. Dr. Semmelweis's suggested intervention was handwashing, which when introduced finally in 1847 saved maternal lives"
 )
 
 
