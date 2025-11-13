@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from pathlib import Path
+import altair as alt
 
 # Set the title and favicon that appear in the Browser's tab bar.
 st.set_page_config(
@@ -96,7 +97,33 @@ if not filtered.empty:
         index='Year', columns='Clinic', values='MortalityRate'
     )
 
-    st.line_chart(pivot)
+    # Reshape for Altair (long format)
+    df_long = pivot.reset_index().melt(id_vars='Year', var_name='Clinic', value_name='MortalityRate')
+    
+    # Create line chart
+    line_chart = alt.Chart(df_long).mark_line(point=True).encode(
+        x=alt.X('Year:O', title='Year'),
+        y=alt.Y('MortalityRate:Q', title='Mortality Rate (%)'),
+        color=alt.Color('Clinic:N', title='Clinic'),
+        tooltip=['Year:O', 'Clinic:N', 'MortalityRate:Q']
+    ).properties(height=400, width=700)
+    
+    # Add vertical line at 1847 with label
+    rule = alt.Chart(pd.DataFrame({'year': [1847]})).mark_rule(
+        color='red', strokeDash=[5, 5], size=2
+    ).encode(
+        x='year:O'
+    )
+    
+    text = alt.Chart(pd.DataFrame({'year': [1847], 'label': ['Handwashing\nIntroduced']})).mark_text(
+        align='center', dy=-10, color='red', fontSize=12, fontWeight='bold'
+    ).encode(
+        x='year:O',
+        text='label:N'
+    )
+    
+    combined_chart = (line_chart + rule + text).interactive()
+    st.altair_chart(combined_chart, use_container_width=True)
 
     st.header(f'Metrics: {from_year} → {to_year}')
 
