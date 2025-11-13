@@ -116,7 +116,7 @@ if not filtered.empty:
     )
     
     text = alt.Chart(pd.DataFrame({'year': [1847], 'label': ['Handwashing\nIntroduced']})).mark_text(
-        align='center', dy=-10, color='red', fontSize=12, fontWeight='bold'
+        align='center', dy=-5, color='red', fontSize=12, fontWeight='bold'
     ).encode(
         x='year:O',
         text='label:N'
