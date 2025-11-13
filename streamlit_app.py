@@ -17,23 +17,22 @@ def get_handwashing_data():
     The expected CSV has columns: Year, Birth, Deaths, Clinic
     Returns a DataFrame with a computed `MortalityRate` percentage (Deaths / Birth * 100).
     """
-    # Try multiple path strategies to handle local dev and deployment environments
-    possible_paths = [
-        Path(__file__).parent / 'data' / 'handwashing.csv',
-        Path.cwd() / 'data' / 'handwashing.csv',
-        Path(__file__).parent.parent / 'data' / 'handwashing.csv',
-    ]
+    import os
     
-    DATA_FILENAME = None
-    for path in possible_paths:
-        if path.exists():
-            DATA_FILENAME = path
-            break
+    # Build path relative to this script's directory
+    script_dir = Path(__file__).resolve().parent
+    data_path = script_dir / 'data' / 'handwashing.csv'
     
-    if DATA_FILENAME is None:
-        raise FileNotFoundError(f"handwashing.csv not found in any expected location: {possible_paths}")
+    # If that doesn't exist, try relative to cwd (for Streamlit Cloud)
+    if not data_path.exists():
+        data_path = Path('data/handwashing.csv').resolve()
     
-    df = pd.read_csv(DATA_FILENAME)
+    if not data_path.exists():
+        raise FileNotFoundError(
+            f"handwashing.csv not found at {script_dir / 'data' / 'handwashing.csv'} or {Path('data/handwashing.csv').resolve()}"
+        )
+    
+    df = pd.read_csv(str(data_path))
 
     # Ensure numeric types
     df['Year'] = pd.to_numeric(df['Year'], errors='coerce').astype('Int64')
