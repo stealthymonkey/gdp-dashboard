@@ -17,7 +17,22 @@ def get_handwashing_data():
     The expected CSV has columns: Year, Birth, Deaths, Clinic
     Returns a DataFrame with a computed `MortalityRate` percentage (Deaths / Birth * 100).
     """
-    DATA_FILENAME = Path(__file__).parent / 'data' / 'handwashing.csv'
+    # Try multiple path strategies to handle local dev and deployment environments
+    possible_paths = [
+        Path(__file__).parent / 'data' / 'handwashing.csv',
+        Path.cwd() / 'data' / 'handwashing.csv',
+        Path(__file__).parent.parent / 'data' / 'handwashing.csv',
+    ]
+    
+    DATA_FILENAME = None
+    for path in possible_paths:
+        if path.exists():
+            DATA_FILENAME = path
+            break
+    
+    if DATA_FILENAME is None:
+        raise FileNotFoundError(f"handwashing.csv not found in any expected location: {possible_paths}")
+    
     df = pd.read_csv(DATA_FILENAME)
 
     # Ensure numeric types
