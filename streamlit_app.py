@@ -158,6 +158,7 @@ if not filtered.empty:
 
             st.metric(label=f"{clinic} mortality", value=value_str, delta=delta, delta_color=delta_color)
 
+st.write("This chart shows the impact of handwashing. If Dr. Semmelweis was better able to convince those around him that handwashing would save lives, handwashing could have saved countless lives. The mdiwife clinic wasn't inherently safer for pregnant women, but rather the hospital needed handwashing to protect mothers during child birth from germs there.")
     st.header('Raw data')
     st.dataframe(filtered.sort_values(['Clinic', 'Year']).reset_index(drop=True))
 else:
